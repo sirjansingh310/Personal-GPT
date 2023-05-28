@@ -4,12 +4,13 @@ import os
 from werkzeug.utils import secure_filename
 
 
-class GPT:
+class GPTService:
     index = None
     queryEngine = None
+    KB = 'knowledge-base'
 
     def __init__(self):
-        documents = SimpleDirectoryReader("./knowledge-base").load_data()
+        documents = SimpleDirectoryReader(self.KB).load_data()
         # todo save in db instead of creating in-memory on server start
         self.index = GPTVectorStoreIndex.from_documents(documents)
 
@@ -21,7 +22,10 @@ class GPT:
 
     def insert_file(self, file):
         filename = secure_filename(file.filename)
-        filepath = os.path.join('knowledge-base', filename)
+        filepath = os.path.join(self.KB, filename)
         file.save(filepath)
         document = SimpleDirectoryReader(input_files=[filepath]).load_data()[0]
         self.index.insert(document)
+
+    def get_file_name(self):
+        return os.listdir(self.KB)
