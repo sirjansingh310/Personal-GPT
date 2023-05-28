@@ -11,9 +11,8 @@ export default function Chat(props) {
         inputRef.current.value = ''
         
         queryPrompt(msg).then(res => {
-            const response = res?.completion?.response || 'No result found'
+            const response = res?.completion?.response || 'No result found from your knowledge base'
             setMessages(prevInput => [...prevInput.slice(0, -1), response])
-            console.log(messages)
         })
     }
 
